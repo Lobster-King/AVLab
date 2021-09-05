@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 import Photos
+import CoreMedia
 
 class AVLabMedia: NSObject {
     var mediaType: String = ""
@@ -79,10 +80,12 @@ class AVLabMediaHandler: NSObject {
 //            return
 //        }
 //
-//        guard let videoTrack = avAsset.tracks(withMediaType: .video).first else {
-//            return
-//        }
-//
+        guard let videoTrack = avAsset.tracks(withMediaType: .video).first else {
+            return
+        }
+        let format = videoTrack.formatDescriptions.first
+        
+        let codecType = CMFormatDescriptionGetMediaSubType(format as! CMFormatDescription).toString()
 //        let readerOutput = AVAssetReaderTrackOutput.init(track: videoTrack, outputSettings: nil)
 //        assetReader.add(readerOutput)
 //        assetReader.startReading()
