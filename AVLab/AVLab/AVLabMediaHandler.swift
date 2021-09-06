@@ -76,21 +76,20 @@ class AVLabMediaHandler: NSObject {
             return
         }
         
-//        guard let assetReader = try? AVAssetReader.init(asset: avAsset) else {
-//            return
-//        }
-//
         guard let videoTrack = avAsset.tracks(withMediaType: .video).first else {
             return
         }
         let format = videoTrack.formatDescriptions.first
         
+        let mediaType = CMFormatDescriptionGetMediaType(format as! CMFormatDescription).toString()
         let codecType = CMFormatDescriptionGetMediaSubType(format as! CMFormatDescription).toString()
-//        let readerOutput = AVAssetReaderTrackOutput.init(track: videoTrack, outputSettings: nil)
-//        assetReader.add(readerOutput)
-//        assetReader.startReading()
+        //TODO:异步加载
+        avAsset.loadValuesAsynchronously(forKeys: ["duration", "preferredRate", "preferredVolume", "preferredTransform", "minimumTimeOffsetFromLive", "tracks", "creationDate", "lyrics", "commonMetadata", "metadata", "availableMetadataFormats", "availableChapterLocales", ""]) {
+            
+        }
         
         // gernal
+        //FIXME:key可能不是String
         for avMetadataItem in avAsset.metadata {
             generalInfo.append([avMetadataItem.key as! String: avMetadataItem.value as! String])
         }
