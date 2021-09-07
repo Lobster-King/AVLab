@@ -24,3 +24,14 @@ extension FourCharCode {
     }
 }
 
+extension CMTime {
+    func toString(format: String)-> String {
+        let seconds = CMTimeGetSeconds(self)
+        let date = Date(timeIntervalSince1970: seconds)
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: date)
+    }
+}
+

@@ -75,50 +75,50 @@ class AVLabMediaHandler: NSObject {
         guard let avAsset = avAsset else {
             return
         }
-        
-        guard let videoTrack = avAsset.tracks(withMediaType: .video).first else {
-            return
-        }
-        let format = videoTrack.formatDescriptions.first
-        
-        let mediaType = CMFormatDescriptionGetMediaType(format as! CMFormatDescription).toString()
-        let codecType = CMFormatDescriptionGetMediaSubType(format as! CMFormatDescription).toString()
         //TODO:异步加载
-        avAsset.loadValuesAsynchronously(forKeys: ["duration", "preferredRate", "preferredVolume", "preferredTransform", "minimumTimeOffsetFromLive", "tracks", "creationDate", "lyrics", "commonMetadata", "metadata", "availableMetadataFormats", "availableChapterLocales", ""]) {
+        avAsset.loadValuesAsynchronously(forKeys: ["c", "tracks", "creationDate", "lyrics", "commonMetadata", "metadata", "availableMetadataFormats", "availableChapterLocales"]) {
+            guard let videoTrack = avAsset.tracks(withMediaType: .video).first else {
+                return
+            }
+            let format = videoTrack.formatDescriptions.first
+            
+            let mediaType = CMFormatDescriptionGetMediaType(format as! CMFormatDescription).toString()
+            let codecType = CMFormatDescriptionGetMediaSubType(format as! CMFormatDescription).toString()
+            // gernal
+            //FIXME:key可能不是String
+            for avMetadataItem in avAsset.metadata {
+                generalInfo.append([avMetadataItem.key as! String: avMetadataItem.value as! String])
+            }
+            
+            let mediaURLItem = ["资源路径": mediaURL.absoluteString]
+            let mediaTypeItem = ["资源类型": mediaType]
+            let formatItem = ["格式": codecType]
+            let formatProfileItem = ["格式概述": ""]
+            let codecIdItem = ["编码ID": ""]
+            
+            let durationStatus = avAsset.statusOfValue(forKey: "duration", error: nil)
+            if durationStatus == .loaded {
+                let durationItem = ["时长": avAsset.duration.toString(format: "HH:mm:ss")]
+                videoInfo.append(durationItem)
+            }
+            
+            let fileSizeItem = ["大小": ""]
+            let bitrateItem = ["比特率": ""]
+            let encodeDateItem = ["编码日期": ""]
+            let tagDateItem = ["Tag日期": ""]
+            let writeLibraryItem = ["编码框架": ""]
+            videoInfo.append(mediaURLItem)
+            videoInfo.append(mediaTypeItem)
+            videoInfo.append(formatItem)
+            videoInfo.append(formatProfileItem)
+            videoInfo.append(codecIdItem)
+            videoInfo.append(fileSizeItem)
+            videoInfo.append(bitrateItem)
+            videoInfo.append(encodeDateItem)
+            videoInfo.append(tagDateItem)
+            videoInfo.append(writeLibraryItem)
             
         }
-        
-        // gernal
-        //FIXME:key可能不是String
-        for avMetadataItem in avAsset.metadata {
-            generalInfo.append([avMetadataItem.key as! String: avMetadataItem.value as! String])
-        }
-        
-        for track in avAsset.tracks {
-            
-        }
-        
-        let mediaURLItem = ["资源路径": mediaURL.absoluteString]
-        let formatItem = ["格式": ""]
-        let formatProfileItem = ["格式概述": ""]
-        let codecIdItem = ["编码ID": ""]
-        let fileSizeItem = ["大小": ""]
-        let durationItem = ["时长": ""]
-        let bitrateItem = ["比特率": ""]
-        let encodeDateItem = ["编码日期": ""]
-        let tagDateItem = ["Tag日期": ""]
-        let writeLibraryItem = ["编码框架": ""]
-        videoInfo.append(mediaURLItem)
-        videoInfo.append(formatItem)
-        videoInfo.append(formatProfileItem)
-        videoInfo.append(codecIdItem)
-        videoInfo.append(fileSizeItem)
-        videoInfo.append(durationItem)
-        videoInfo.append(bitrateItem)
-        videoInfo.append(encodeDateItem)
-        videoInfo.append(tagDateItem)
-        videoInfo.append(writeLibraryItem)
-
         
     }
     
